@@ -1,6 +1,6 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import { NextRequest, NextResponse } from 'next/server';
-import { generateIntelligentScript } from './intelligent-script-engine';
+import { generateStoryScript } from './story-writer-engine';
 import { formatFullScript } from './script-formatter';
 
 // 使用 AWS Bedrock
@@ -24,10 +24,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 如果启用 Mock 模式，使用智能代码生成
+    // 如果启用 Mock 模式，使用故事编剧引擎
     if (USE_MOCK) {
-      console.log('Using Intelligent Script Engine - Theme-based unique story generation');
-      const rawScript = generateIntelligentScript(
+      console.log('Using Story Writer Engine - Real storytelling with plot and logic');
+      const rawScript = generateStoryScript(
         theme,
         knowledgePoints,
         difficulty,
