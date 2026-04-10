@@ -1,0 +1,29 @@
+🔑 SSH Key 配置完成！
+====================
+
+✅ 第一步：SSH Key 已生成
+✅ 第二步：公钥已复制到剪贴板
+
+你的 SSH 公钥是：
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDDjXeNNs8p6MvAan3LcuE1M+OUEPeHMdxl5mMiK6h9H kristy@github
+
+
+📝 接下来你需要做的：
+====================
+
+1️⃣ 打开浏览器，访问：
+   https://github.com/settings/keys
+
+2️⃣ 点击绿色按钮 "New SSH key"
+
+3️⃣ 填写表单：
+   - Title（标题）: 随便起个名字，比如 "My Mac"
+   - Key type: Authentication Key（默认已选中）
+   - Key（密钥）: 按 Cmd+V 粘贴（已经在剪贴板了）
+
+4️⃣ 点击 "Add SSH key"
+
+5️⃣ GitHub 可能会要求你输入密码确认
+
+
+✅ 添加完成后，告诉我，我会继续推送代码！

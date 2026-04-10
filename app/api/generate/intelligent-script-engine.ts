@@ -18,6 +18,7 @@ interface StoryContext {
   conflict: string;
   resolution: string;
   tone: string;
+  setting: string;
 }
 
 export function generateIntelligentScript(
@@ -161,6 +162,7 @@ function analyzeThemeContext(theme: string): StoryContext {
     conflict,
     resolution,
     tone,
+    setting,
   };
 }
 

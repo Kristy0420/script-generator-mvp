@@ -10,7 +10,12 @@ interface Scene {
 }
 
 interface Script {
+  episodeCode?: string;
   title: string;
+  characters?: any[];
+  knowledgePoints?: any[];
+  synopsis?: string;
+  sceneSettings?: string[];
   scenes: Scene[];
 }
 

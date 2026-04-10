@@ -170,9 +170,8 @@ Remember: Be CREATIVE! Each theme deserves its own unique story structure!`;
       success: true,
       script: scriptData,
       metadata: {
-        knowledgePoint: knowledgePoint.name,
+        theme,
         difficulty,
-        repetitionCount,
         generatedAt: new Date().toISOString(),
       },
     });
