@@ -1,6 +1,6 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import { NextRequest, NextResponse } from 'next/server';
-import { generateStoryScript } from './story-writer-engine';
+import { generateCompliantStory } from './compliant-story-engine';
 import { formatFullScript } from './script-formatter';
 
 // 使用 AWS Bedrock
@@ -24,10 +24,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 如果启用 Mock 模式，使用故事编剧引擎
+    // 如果启用 Mock 模式，使用符合规范的故事引擎
     if (USE_MOCK) {
-      console.log('Using Story Writer Engine - Real storytelling with plot and logic');
-      const rawScript = generateStoryScript(
+      console.log('Using Compliant Story Engine - Full compliance with children animation standards');
+      const rawScript = generateCompliantStory(
         theme,
         knowledgePoints,
         difficulty,
