@@ -58,89 +58,79 @@ export async function POST(request: NextRequest) {
       `- "${k.name}"${k.description ? `: ${k.description}` : ''} (mention ${k.repetitionCount} times naturally)`
     ).join('\n');
 
-    const prompt = `You are a professional scriptwriter for children's English teaching animations (ages 3-8). Create an original, engaging story based on the theme. Reference "Fresh Soup" for comedy techniques and fun atmosphere, but DO NOT copy plots or use fixed templates.
+    const prompt = `You are an award-winning children's animation scriptwriter. Your job is to write a COMPLETE, ENGAGING STORY with real dramatic conflict, NOT just a framework.
 
 Theme: ${theme}
+Characters: ${characterList}
+Words to include naturally: ${knowledgeList}
 
-Characters:
-${characterList}
+YOUR TASK: Write a 2-3 minute animated story with:
 
-Learning Points (must appear naturally in dialogue):
-${knowledgeList}
+1. REAL STORY STRUCTURE (like Fresh Soup episodes):
 
-CRITICAL COMPLIANCE STANDARDS FOR CHILDREN'S ANIMATION:
+   SETUP (30 sec): Characters doing something normal → Something specific goes wrong
+   Example: "Zack is building a card tower. Emily walks by eating chips. She sneezes. Tower falls."
 
-1. **单一因果链 (Single Causal Chain: A→B→C)**
-   - Story MUST have clear A→B→C structure
-   - A: 具体的初始状态/问题 (specific, visible initial state/problem)
-   - B: 因为A导致的第一个后果 (first consequence caused by A)
-   - C: 因为B导致的最终结果 (final result caused by B)
-   - 统一的核心目标 (unified core goal throughout)
-   - NO parallel plots, NO subplots, ONE clear storyline only
+   CONFLICT & ATTEMPTS (60-90 sec): They try to fix it → Makes it worse → Emotional reaction → New idea
+   Example: "Zack rebuilds, asks Emily to be quiet. She tiptoes, trips on toy, knocks tower again. Zack upset. Emily finds soft cloth to put under cards - it works!"
 
-2. **行为逻辑 (Behavior Logic)**
-   - EVERY character action MUST have a visible trigger from previous scene
-   - Format: Trigger (already established) → Action (visible) → Consequence (clear)
-   - 可见的动机 (visible motivation): Children must understand WHY without explanation
-   - NO sudden decisions, NO unexplained behaviors
-   - Build on previously established information only
+   RESOLUTION (30 sec): Success through teamwork → Feel good moment
 
-3. **视听表达 (Audio-Visual Expression)**
-   - 开场即可看懂 (Opening scene must be clear without sound)
-   - 关键动作有过程 (Key actions must show complete process, not just result)
-   - 1秒能定位焦点 (Focus point visible within 1 second)
-   - 静音也能看懂 (Story understandable even on mute)
-   - Use shot types effectively: 大景别, 全景, 中景, 近景, 特写, 推镜头, 跟镜头
+2. DRAMATIC CONFLICT - The story NEEDS:
+   - A SPECIFIC problem (not vague like "need to help", but "the egg is rolling toward the edge!")
+   - Failed attempts that make things WORSE (comedy comes from escalation)
+   - Emotional stakes (character really wants/needs something)
+   - A clever solution that pays off earlier details
 
-4. **安全与价值观 (Safety & Values)**
-   - 无可模仿危险 (NO imitable dangerous actions)
-   - 正向行为获益 (Positive behaviors lead to success)
-   - 无工具直接解决 (NO magical tools solving everything instantly)
-   - 重视过程而非速成 (Emphasize process, not shortcuts)
-   - Teach: observation, thinking, cooperation, patience
+3. KNOWLEDGE POINTS INTEGRATION:
+   - Use them IN THE ACTION, not as random comments
+   - BAD: "Look at this!" (forced)
+   - GOOD: Character naturally says "Be careful!" when egg is rolling, or "It's too heavy!" when lifting something
 
-5. **Natural Knowledge Integration**
-   - Knowledge points must fit story context perfectly
-   - Use in dialogue naturally, never forced
-   - Repeat as specified, but in different meaningful situations
-   - Children should learn without noticing they're being taught
+4. WRITE SPECIFIC ACTIONS:
+   - BAD: "They work together"
+   - GOOD: "Zack holds the box steady while Emily climbs on the chair to reach the top shelf"
+   - BAD: "They find a solution"
+   - GOOD: "Emily notices the wagon in the corner - they can use it to carry the heavy box!"
 
-6. **Story Quality (Fresh Soup style)**
-   - Fun, light comedy atmosphere
-   - Natural character interactions with humor
-   - Unexpected but logical plot developments
-   - Satisfying resolution that completes the causal chain
+5. DIALOGUE MUST BE NATURAL:
+   - Kids talk in short, simple sentences
+   - Show emotion: "Oh no!" "Yes!" "Wait... I have an idea!"
+   - React to what JUST happened: If ball rolls away, say "Catch it!" not "That's interesting"
 
-STRICT FORMAT - Output ONLY valid JSON:
+EXAMPLE OF GOOD STORY BEATS:
+- Zack tries to reach cookie jar on high shelf (goal established)
+- Stands on chair - too short (attempt #1 fails)
+- Stacks books on chair - books slide, he almost falls (attempt #2 worse!)
+- Emily arrives: "Are you okay?" Zack: "I can't reach it!"
+- Emily: "Wait! What if we use the broom to push it closer?"
+- They work together - broom pushes jar to edge - Zack catches it
+- Both celebrate with cookies
+
+OUTPUT FORMAT (JSON only):
 {
   "episodeCode": "D1P1",
-  "title": "Story Title (English)",
-  "characters": [{"name": "Name", "personality": "personality description"}],
-  "knowledgePoints": [{"name": "word/phrase", "description": "natural usage", "repetitionCount": 2}],
-  "synopsis": "剧情梗概（中文，100-200字，必须体现A→B→C因果链）",
-  "sceneSettings": ["【场景设定：specific location and atmosphere】"],
+  "title": "Clear title describing the story (e.g., 'The Cookie Jar Challenge')",
+  "characters": [{"name": "${characters[0]?.name || 'Zack'}", "personality": "curious and determined"}],
+  "knowledgePoints": [{"name": "word", "description": "natural context sentence", "repetitionCount": 2}],
+  "synopsis": "具体剧情梗概（中文）：谁想做什么→遇到什么具体困难→怎么尝试→怎么变糟→最后怎么解决",
+  "sceneSettings": ["【场景：具体地点，如'厨房，下午，阳光从窗户照进来'】"],
   "scenes": [
-    {
-      "order": 1,
-      "role": "SCENE INFO" | "CAMERA" | "Character Name",
-      "dialogue": "English dialogue or camera direction",
-      "action": "表情/动作" (for character lines),
-      "visualDescription": "中文画面描述（必须具体、可视、符合前文逻辑）",
-      "shotType": "镜头类型",
-      "audioNote": "音效/音乐" (optional),
-      "knowledgePointUsed": true/false,
-      "knowledgePointName": "知识点名称" (if used)
-    }
+    {"order": 1, "role": "SCENE INFO", "dialogue": "SCENE 1 - Kitchen, afternoon", "visualDescription": "厨房全景，Zack站在高柜子前抬头看", "shotType": "全景", "knowledgePointUsed": false},
+    {"order": 2, "role": "Zack", "dialogue": "I want that cookie!", "action": "指向高处", "visualDescription": "Zack抬头看着高架上的饼干罐", "shotType": "中景", "knowledgePointUsed": false},
+    {"order": 3, "role": "Zack", "dialogue": "But it's too high!", "action": "踮脚尝试", "visualDescription": "Zack踮起脚尖，手臂伸长但够不着", "shotType": "近景", "knowledgePointUsed": true, "knowledgePointName": "too high"}
   ]
 }
 
-BEFORE writing each scene, verify:
-- Does this action have a trigger from previous scene?
-- Is the motivation visible to children?
-- Does this advance the A→B→C causal chain?
-- Is this safe and educational?
+CRITICAL:
+- Write 15-25 scene beats total
+- Each scene = ONE specific action or line
+- Show cause-and-effect: scene 5 happens BECAUSE of scene 4
+- Include 2-3 failed attempts before success
+- Use knowledge points when characters naturally express emotions or describe what they see
+- End with satisfying resolution and friendship moment
 
-Remember: Children's animation is NOT about teaching, it's about storytelling that naturally contains learning!`;
+Write a REAL story with REAL conflict, not a template!`;
 
     // 调用 AWS Bedrock Claude API
     const modelId = process.env.ANTHROPIC_DEFAULT_SONNET_MODEL ||
