@@ -58,79 +58,84 @@ export async function POST(request: NextRequest) {
       `- "${k.name}"${k.description ? `: ${k.description}` : ''} (mention ${k.repetitionCount} times naturally)`
     ).join('\n');
 
-    const prompt = `You are an award-winning children's animation scriptwriter. Your job is to write a COMPLETE, ENGAGING STORY with real dramatic conflict, NOT just a framework.
+    const prompt = `You are an award-winning children's animation scriptwriter. Write a COMPLETE story with real plot and natural dialogue.
 
 Theme: ${theme}
 Characters: ${characterList}
-Words to include naturally: ${knowledgeList}
+Knowledge Points to integrate: ${knowledgeList}
 
-YOUR TASK: Write a 2-3 minute animated story with:
+STEP 1: ANALYZE THE KNOWLEDGE POINTS
+Look at each word/phrase and think: "What story situations would make this word appear NATURALLY?"
 
-1. REAL STORY STRUCTURE (like Fresh Soup episodes):
+Examples:
+- "heavy" → story about moving/carrying something large
+- "careful" → story with something fragile or a tricky situation
+- "delicious" → story involving food or cooking
+- "together" → story where cooperation is needed
 
-   SETUP (30 sec): Characters doing something normal → Something specific goes wrong
-   Example: "Zack is building a card tower. Emily walks by eating chips. She sneezes. Tower falls."
+STEP 2: DESIGN A PLOT THAT CREATES NATURAL CONTEXTS FOR THESE WORDS
+Don't force the words into a generic story. Instead, craft a story where these words would be the OBVIOUS things characters would say.
 
-   CONFLICT & ATTEMPTS (60-90 sec): They try to fix it → Makes it worse → Emotional reaction → New idea
-   Example: "Zack rebuilds, asks Emily to be quiet. She tiptoes, trips on toy, knocks tower again. Zack upset. Emily finds soft cloth to put under cards - it works!"
+Example: If words are "heavy", "careful", "together"
+Good plot: Two kids need to move a big box of toys upstairs
+- "This box is heavy!" (naturally said when lifting)
+- "Be careful on the stairs!" (naturally said in dangerous moment)
+- "Let's carry it together!" (natural solution)
 
-   RESOLUTION (30 sec): Success through teamwork → Feel good moment
+Bad plot: Kids playing in park randomly say these words
 
-2. DRAMATIC CONFLICT - The story NEEDS:
-   - A SPECIFIC problem (not vague like "need to help", but "the egg is rolling toward the edge!")
-   - Failed attempts that make things WORSE (comedy comes from escalation)
-   - Emotional stakes (character really wants/needs something)
-   - A clever solution that pays off earlier details
+STEP 3: WRITE THE COMPLETE STORY
+Follow natural story logic (Fresh Soup style):
+- Clear goal (what do characters want?)
+- Obstacles (what gets in the way?)
+- Attempts (how do they try? what happens?)
+- Resolution (how does it work out?)
 
-3. KNOWLEDGE POINTS INTEGRATION:
-   - Use them IN THE ACTION, not as random comments
-   - BAD: "Look at this!" (forced)
-   - GOOD: Character naturally says "Be careful!" when egg is rolling, or "It's too heavy!" when lifting something
+The number of attempts, conflicts, twists should depend on:
+- How many knowledge points need to be used
+- What makes sense for THIS specific story
+- Natural dramatic pacing
 
-4. WRITE SPECIFIC ACTIONS:
-   - BAD: "They work together"
-   - GOOD: "Zack holds the box steady while Emily climbs on the chair to reach the top shelf"
-   - BAD: "They find a solution"
-   - GOOD: "Emily notices the wagon in the corner - they can use it to carry the heavy box!"
+DIALOGUE RULES:
+✓ Short, kid-friendly sentences
+✓ React to what JUST happened visually
+✓ Express emotions: "Oh no!" "Wow!" "Yes!"
+✓ Use knowledge points when describing/reacting to situations
+✗ Don't randomly announce words
+✗ Don't have characters explain things unnecessarily
 
-5. DIALOGUE MUST BE NATURAL:
-   - Kids talk in short, simple sentences
-   - Show emotion: "Oh no!" "Yes!" "Wait... I have an idea!"
-   - React to what JUST happened: If ball rolls away, say "Catch it!" not "That's interesting"
+SPECIFIC ACTIONS (not vague):
+✗ Bad: "They work together"
+✓ Good: "Zack holds the door open while Emily pushes the bike through"
 
-EXAMPLE OF GOOD STORY BEATS:
-- Zack tries to reach cookie jar on high shelf (goal established)
-- Stands on chair - too short (attempt #1 fails)
-- Stacks books on chair - books slide, he almost falls (attempt #2 worse!)
-- Emily arrives: "Are you okay?" Zack: "I can't reach it!"
-- Emily: "Wait! What if we use the broom to push it closer?"
-- They work together - broom pushes jar to edge - Zack catches it
-- Both celebrate with cookies
+✗ Bad: "They solve the problem"
+✓ Good: "Emily spots the rope hanging from the tree - they can use it to pull the ball down!"
 
 OUTPUT FORMAT (JSON only):
 {
   "episodeCode": "D1P1",
-  "title": "Clear title describing the story (e.g., 'The Cookie Jar Challenge')",
-  "characters": [{"name": "${characters[0]?.name || 'Zack'}", "personality": "curious and determined"}],
-  "knowledgePoints": [{"name": "word", "description": "natural context sentence", "repetitionCount": 2}],
-  "synopsis": "具体剧情梗概（中文）：谁想做什么→遇到什么具体困难→怎么尝试→怎么变糟→最后怎么解决",
-  "sceneSettings": ["【场景：具体地点，如'厨房，下午，阳光从窗户照进来'】"],
+  "title": "Story title reflecting the actual plot",
+  "characters": [{"name": "Name", "personality": "personality"}],
+  "knowledgePoints": [{"name": "word", "description": "how it's used in story", "repetitionCount": 2}],
+  "synopsis": "完整剧情梗概（中文）：谁想做什么具体的事→遇到什么具体问题→怎么解决（体现知识点使用情境）",
+  "sceneSettings": ["【场景：具体描述地点、时间、氛围】"],
   "scenes": [
-    {"order": 1, "role": "SCENE INFO", "dialogue": "SCENE 1 - Kitchen, afternoon", "visualDescription": "厨房全景，Zack站在高柜子前抬头看", "shotType": "全景", "knowledgePointUsed": false},
-    {"order": 2, "role": "Zack", "dialogue": "I want that cookie!", "action": "指向高处", "visualDescription": "Zack抬头看着高架上的饼干罐", "shotType": "中景", "knowledgePointUsed": false},
-    {"order": 3, "role": "Zack", "dialogue": "But it's too high!", "action": "踮脚尝试", "visualDescription": "Zack踮起脚尖，手臂伸长但够不着", "shotType": "近景", "knowledgePointUsed": true, "knowledgePointName": "too high"}
+    {"order": 1, "role": "SCENE INFO", "dialogue": "Scene description", "visualDescription": "具体画面描述", "shotType": "全景/中景/近景等", "knowledgePointUsed": false},
+    {"order": 2, "role": "Character Name", "dialogue": "Natural English dialogue", "action": "具体动作/表情", "visualDescription": "画面中看到什么", "shotType": "镜头类型", "knowledgePointUsed": true, "knowledgePointName": "word"},
+    ... (continue with 15-25 scenes total)
   ]
 }
 
-CRITICAL:
-- Write 15-25 scene beats total
-- Each scene = ONE specific action or line
-- Show cause-and-effect: scene 5 happens BECAUSE of scene 4
-- Include 2-3 failed attempts before success
-- Use knowledge points when characters naturally express emotions or describe what they see
-- End with satisfying resolution and friendship moment
+KEY PRINCIPLES:
+1. Story structure should SERVE the knowledge points, not fight them
+2. Let plot length and complexity emerge naturally from the story needs
+3. Each knowledge point repetition should happen in a DIFFERENT situation that makes sense
+4. Comedy and drama come from CHARACTER reactions to specific situations
+5. End when the story naturally concludes, not at a fixed length
 
-Write a REAL story with REAL conflict, not a template!`;
+Think: "If I were a kid watching this, would the dialogue feel natural? Would I understand why characters say what they say?"
+
+Write a story where the knowledge points feel inevitable, not inserted.`;
 
     // 调用 AWS Bedrock Claude API
     const modelId = process.env.ANTHROPIC_DEFAULT_SONNET_MODEL ||
